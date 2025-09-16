@@ -192,3 +192,373 @@ def random_number(num):
       print("We have the same number!")
     else :
       print(f"fail message! number : {num}, genarated number : {rand_num}\n")
+
+
+"""
+Exercise 6 : Let’s create some personalized shirts !
+
+Write a function called make_shirt() that accepts a size and the text of a message that should be printed on the shirt.
+The function should print a sentence summarizing the size of the shirt and the message printed on it, such as “The size of the shirt is size and the text is text“
+Call the function make_shirt().
+Modify the make_shirt() function so that shirts are large by default with a message that reads “I love Python” by default.
+Call the function, in order to make a large shirt with the default message
+Make medium shirt with the default message
+Make a shirt of any size with a different message.
+
+Bonus: Call the function make_shirt() using keyword arguments.
+"""
+def make_shirt(size, txt):
+  print(f"The size of the shirt is {size} and the text is {txt}.\n")
+
+
+make_shirt("S", "Focus on your weight")
+
+def make_shirt(size= "L", txt= "I love Python"):
+  print(f"The size of the shirt is {size} and the text is {txt}.\n")
+
+make_shirt()
+
+make_shirt("M")
+
+make_shirt(txt="Good Morning")
+
+"""
+Bonus: Call the function make_shirt() using keyword arguments.
+"""
+def make_shirt(*args):
+  print(f"The size of the shirt is {args[0]} and the text is {args[1]}.\n")
+
+make_shirt('M', 'This is my lovely size')
+
+
+"""
+Exercise 7 : Temperature Advice
+
+Instructions : 
+
+> Create a function called get_random_temp().
+  1. This function should return an integer between -10 and 40 degrees (Celsius), selected at random.
+  2. Test your function to make sure it generates expected results.
+
+> Create a function called main().
+  1. Inside this function, call get_random_temp() to get a temperature, and store its value in a variable.
+  2. Inform the user of the temperature in a friendly message, eg. “The temperature right now is 32 degrees Celsius.”
+
+> Let’s add more functionality to the main() function. Write some friendly advice relating to the temperature:
+  1. below zero (eg. “Brrr, that’s freezing! Wear some extra layers today”)
+  2. between zero and 16 (eg. “Quite chilly! Don’t forget your coat”)
+  3. between 16 and 23
+  4. between 24 and 32
+  5. between 32 and 40
+
+> Change the get_random_temp() function:
+  1. Add a parameter to the function, named ‘season’.
+  2. Inside the function, instead of simply generating a random number between -10 and 40, set lower and upper limits based on the season, eg. if season is ‘winter’, temperatures should only fall between -10 and 16.
+  3. Now that we’ve changed get_random_temp(), let’s change the main() function:
+     3.1. Before calling get_random_temp(), we will need to decide on a season, so that we can call the function correctly. Ask the user to type in a season - ‘summer’, ‘autumn’ (you can use ‘fall’ if you prefer), ‘winter’, or ‘spring’.
+     3.2. Use the season as an argument when calling get_random_temp().
+
+Bonus: Give the temperature as a floating-point number instead of an integer.
+Bonus: Instead of asking for the season, ask the user for the number of the month (1 = January, 12 = December). Determine the season according to the month.
+"""
+
+import random
+
+def get_random_temp():
+  return random.randint(-10, 40)
+
+print(f"Test get_random_temp() function : {get_random_temp()}\n")
+
+def main():
+  temperature = get_random_temp()
+  print(f"The temperature right now is {temperature} degrees Celsius.\n")
+
+  if temperature < 0:
+    print("Brrr, that’s freezing! Wear some extra layers today\n")
+  elif 0 <= temperature < 16:
+    print("Quite chilly! Don’t forget your coat\n")
+  elif 16 <= temperature <= 23:
+    print("Nice and mild. Light layers are perfect, maybe a sweater for the evening.\n")
+  elif 24 <= temperature < 32:
+    print("Warm to hot. Stay hydrated, use sunscreen, and take breaks in the shade.\n")
+  elif 32 <= temperature <= 40:
+    print("Go easy during peak sun, drink plenty of water, wear breathable clothes, and check on elders/kids.\n")
+
+main()
+
+def get_random_temp(season):
+  SEASON_TEMP = {
+    "winter": (-10, 16),
+    "spring": (5, 24),
+    "summer": (17, 40),
+    "autumn": (5, 23)
+    }
+
+  season_limits = SEASON_TEMP.get(season.lower(), "None")
+
+  return random.randint(season_limits[0], season_limits[1])
+
+
+def main():
+  user_season = input("Enter a season - ‘summer’, ‘autumn’, ‘winter’ or ‘spring’ : ")
+  temperature = get_random_temp(user_season)
+  print(f"\nThe temperature right now is {temperature} degrees Celsius.\n")
+
+  if temperature < 0:
+    print("Brrr, that’s freezing! Wear some extra layers today\n")
+  elif 0 <= temperature < 16:
+    print("Quite chilly! Don’t forget your coat\n")
+  elif 16 <= temperature <= 23:
+    print("Nice and mild. Light layers are perfect, maybe a sweater for the evening.\n")
+  elif 24 <= temperature < 32:
+    print("Warm to hot. Stay hydrated, use sunscreen, and take breaks in the shade.\n")
+  elif 32 <= temperature <= 40:
+    print("Go easy during peak sun, drink plenty of water, wear breathable clothes, and check on elders/kids.\n")
+
+main()
+
+
+"""
+Bonus: Give the temperature as a floating-point number instead of an integer.
+Bonus: Instead of asking for the season, ask the user for the number of the month (1 = January, 12 = December). Determine the season according to the month.
+"""
+
+def get_random_temp(month_number):
+  SEASON_TEMP = {
+    "winter": [[12, 1, 2], (-10, 16)],
+    "spring": [[3, 4, 5],(5, 24)],
+    "summer": [[6, 7, 8],(17, 40)],
+    "autumn": [[9, 10, 11], (5, 23)]
+    }
+
+  for key, value in SEASON_TEMP.items():
+    if month_number in value[0]:
+      season = key
+
+  season_limits = SEASON_TEMP.get(season, "None")
+
+  return round(random.uniform(float(season_limits[1][0]), float(season_limits[1][1])), 2)
+
+def main():
+  month_number = int(input("Enter the number of the month (1 = January, 12 = December) : "))
+  temperature = get_random_temp(month_number)
+  print(f"\nThe temperature right now is {temperature} degrees Celsius.\n")
+
+  if temperature < 0:
+    print("Brrr, that’s freezing! Wear some extra layers today\n")
+  elif 0 <= temperature < 16:
+    print("Quite chilly! Don’t forget your coat\n")
+  elif 16 <= temperature <= 23:
+    print("Nice and mild. Light layers are perfect, maybe a sweater for the evening.\n")
+  elif 24 <= temperature < 32:
+    print("Warm to hot. Stay hydrated, use sunscreen, and take breaks in the shade.\n")
+  elif 32 <= temperature <= 40:
+    print("Go easy during peak sun, drink plenty of water, wear breathable clothes, and check on elders/kids.\n")
+
+main()
+
+
+"""
+Exercise 8 : Star Wars Quiz
+
+Instructions
+
+This project allows users to take a quiz to test their Star Wars knowledge.
+The number of correct/incorrect answers are tracked and the user receives different messages depending on how well they did on the quiz.
+
+Here is an array of dictionaries, containing those questions and answers:
+
+data = [
+    {
+        "question": "What is Baby Yoda's real name?",
+        "answer": "Grogu"
+    },
+    {
+        "question": "Where did Obi-Wan take Luke after his birth?",
+        "answer": "Tatooine"
+    },
+    {
+        "question": "What year did the first Star Wars movie come out?",
+        "answer": "1977"
+    },
+    {
+        "question": "Who built C-3PO?",
+        "answer": "Anakin Skywalker"
+    },
+    {
+        "question": "Anakin Skywalker grew up to be who?",
+        "answer": "Darth Vader"
+    },
+    {
+        "question": "What species is Chewbacca?",
+        "answer": "Wookiee"
+    }
+]
+
+1. Create a function that asks the questions to the user, and check his answers. Track the number of correct, incorrect answers. Create a list of wrong_answers
+2. Create a function that informs the user of his number of correct/incorrect answers.
+
+3. Bonus : display to the user the questions he answered wrong, his answer, and the correct answer.
+If he had more then 3 wrong answers, ask him to play again.
+"""
+data = [
+    {
+        "question": "What is Baby Yoda's real name?",
+        "answer": "Grogu"
+    },
+    {
+        "question": "Where did Obi-Wan take Luke after his birth?",
+        "answer": "Tatooine"
+    },
+    {
+        "question": "What year did the first Star Wars movie come out?",
+        "answer": "1977"
+    },
+    {
+        "question": "Who built C-3PO?",
+        "answer": "Anakin Skywalker"
+    },
+    {
+        "question": "Anakin Skywalker grew up to be who?",
+        "answer": "Darth Vader"
+    },
+    {
+        "question": "What species is Chewbacca?",
+        "answer": "Wookiee"
+    }
+]
+
+def ask():
+  wrong_answers = []
+  
+  num_correct = 0
+  num_incorrect = 0
+
+  for i  in range(0, len(data)):
+    for key, value in data[i].items():
+      if key == "question":
+        answer = input(f"{value} ")
+      else:
+        if answer.lower() == value.lower():
+          print("Correct!\n")
+          num_correct +=1
+        else:
+          print("Wrong answer!\n")
+          wrong_answers.append(answer)
+          num_incorrect +=1
+    
+  print(f"The number of correct answer : {num_correct}\n")
+  print(f"The number of incorrect answer : {num_incorrect}\n")
+  print(f"List of wrong answers : {wrong_answers}\n")
+
+ask()
+
+def ask():
+  wrong_answers = []
+  
+  num_correct = 0
+  num_incorrect = 0
+
+  for i  in range(0, len(data)):
+    for key, value in data[i].items():
+      if key == "question":
+        answer = input(f"{value} ")
+      else:
+        if answer.lower() == value.lower():
+          print("Correct!\n")
+          num_correct +=1
+        else:
+          print("Wrong answer!\n")
+          wrong_answers.append(answer)
+          num_incorrect +=1
+
+  return num_correct, num_incorrect, wrong_answers
+    
+def inform_user(answer):
+  print(f"The number of correct answer : {answer[0]}\n")
+  print(f"The number of incorrect answer : {answer[1]}\n")
+  print(f"List of wrong answers : {answer[2]}\n")
+
+quiz = ask()
+
+inform_user(quiz)
+
+"""
+3. Bonus : display to the user the questions he answered wrong, his answer, and the correct answer.
+If he had more then 3 wrong answers, ask him to play again.
+"""
+
+data = [
+    {
+        "question": "What is Baby Yoda's real name?",
+        "answer": "Grogu"
+    },
+    {
+        "question": "Where did Obi-Wan take Luke after his birth?",
+        "answer": "Tatooine"
+    },
+    {
+        "question": "What year did the first Star Wars movie come out?",
+        "answer": "1977"
+    },
+    {
+        "question": "Who built C-3PO?",
+        "answer": "Anakin Skywalker"
+    },
+    {
+        "question": "Anakin Skywalker grew up to be who?",
+        "answer": "Darth Vader"
+    },
+    {
+        "question": "What species is Chewbacca?",
+        "answer": "Wookiee"
+    }
+]
+
+def ask():
+  question_wrong_answer = []
+  wrong_answers = []
+  correct_answers = []
+  
+  num_correct = 0
+  num_incorrect = 0
+
+  for i  in range(0, len(data)):
+    for key, value in data[i].items():
+      if key == "question":
+        answer = input(f"{value} ")
+      else:
+        if answer.lower() == value.lower():
+          print("Correct!\n")
+          num_correct +=1
+        elif answer.lower() != value.lower():
+          print("Wrong answer!\n")
+          question_wrong_answer.append(data[i]["question"])
+          correct_answers.append(data[i]["answer"])
+          wrong_answers.append(answer)
+          num_incorrect +=1
+
+  return num_correct, num_incorrect, wrong_answers, question_wrong_answer, correct_answers
+    
+def inform_user(answer):
+  print(f"\nThe number of correct answer : {answer[0]}")
+  print(f"The number of incorrect answer : {answer[1]}")
+  if len(answer[2]) > 1:
+    print(f"List of wrong answers : {answer[2]}\n")
+    print(f"The questions you answered wrong : \n")
+    for i in range(0, len(answer[2])):
+      print(f"The question : {answer[3][i]}")
+      print(f"Your answer : {answer[2][i]}")
+      print(f"The correct answer : {answer[4][i]}\n")
+
+# Main game loop
+while True:
+    game_results = ask()
+    inform_user(game_results)
+
+    if game_results[1] > 3:
+        decision = input("You had more than 3 wrong answers. Do you want to play again? \"Y\" or \"N\"\n")
+        if decision.upper() != "Y":
+            break
+    else:
+        break
