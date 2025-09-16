@@ -142,7 +142,7 @@ def throw_until_doubles():
     list2.append(dice2)
 
     if dice1 == dice2:
-      #print(f"Results : {list(zip(list1, list2))}") # if you want to see the result of throwing dice remove #
+      #print(f"Results : {list(zip(list1, list2))}") #if you want to see the result of throwing dice remove #
       break
   
   return count
