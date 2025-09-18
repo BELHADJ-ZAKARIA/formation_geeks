@@ -135,7 +135,7 @@ class MenuManager:
   
     item_found = False
     for dish in self.menu:
-       if dish["name"] == name:
+       if dish["name"] == name.capitalize():
         dish["price"] = price
         dish["spice_level"] = spice
         dish["gluten_index"] = gluten
@@ -148,7 +148,7 @@ class MenuManager:
   def remove_item(self, name):
     item_found = False
     for dish in self.menu:
-      if dish["name"] == name:
+      if dish["name"] == name.capitalize():
         self.menu.remove(dish)
         item_found = True
         break
