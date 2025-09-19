@@ -26,5 +26,3 @@ def main():
       game = Game()
       result = game.play()
       results[result] +=1
-
-main()
