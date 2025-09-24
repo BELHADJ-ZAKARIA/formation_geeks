@@ -19,12 +19,12 @@ Content-Type: application/json
 
 
 ### update a student
-PUT http://localhost:5001/students/1
+PUT http://localhost:5001/students/6
 Content-Type: application/json
 
 {
     "name": "Saad Khaldi",
-    "email": "saad.khaldi@example.com",
+    "email": "saad.khaldi2025@example.com",
     "age": 20,
     "gender": "male"
 }
