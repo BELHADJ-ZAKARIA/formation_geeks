@@ -1,0 +1,34 @@
+### get all students
+GET http://localhost:5001/students?page=1&limit=5
+
+
+### get a student by id
+GET http://localhost:5001/students/4
+
+
+### create a student
+POST http://localhost:5001/students
+Content-Type: application/json
+
+{
+    "name": "Saad Khaldi",
+    "email": "saad.khaldi@example.com",
+    "age": 20,
+    "gender": "male"
+}
+
+
+### update a student
+PUT http://localhost:5001/students/1
+Content-Type: application/json
+
+{
+    "name": "Saad Khaldi",
+    "email": "saad.khaldi@example.com",
+    "age": 20,
+    "gender": "male"
+}
+
+
+### delete a student
+DELETE http://localhost:5001/students/8
