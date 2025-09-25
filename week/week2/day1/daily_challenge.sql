@@ -22,4 +22,4 @@ FROM actors
 -- Try to add a new actor with some blank fields. What do you think the outcome will be ?
 -- Answer: We are getting errors because of the declaration in creating the table in which we put the condition NOT NULL
 INSERT INTO actors (first_name, last_name, birth_date, number_oscars)
-VALUES ('Abd jabar', 'Lawzir');
+VALUES ('Abd el jabar', 'Lawzir');
