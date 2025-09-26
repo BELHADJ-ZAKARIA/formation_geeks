@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+          <h2 class="h5 mb-0">Vehicle Details</h2>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <strong>Make:</strong><span>{{ vehicle.make }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <strong>Model:</strong><span>{{ vehicle.model }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <strong>Year:</strong><span>{{ vehicle.year }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <strong>VIN:</strong><span class="font-monospace">{{ vehicle.vin }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <strong>Color:</strong><span>{{ vehicle.color or 'N/A' }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <strong>Price:</strong><span class="fw-bold text-success h5 mb-0">${{ "{:,.2f}".format(vehicle.price) }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <a href="{{ url_for('vehicles.index') }}" class="btn btn-secondary">Back</a>
+          <a href="{{ url_for('vehicles.edit', vehicle_id=vehicle.id) }}" class="btn btn-primary">Edit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

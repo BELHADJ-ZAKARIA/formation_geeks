@@ -1,0 +1,48 @@
+from flask import Flask, render_template, request
+from dotenv import load_dotenv
+from werkzeug.exceptions import HTTPException
+import os
+import traceback
+
+from models import vehicles_bp  # your blueprint export
+
+load_dotenv()
+
+app = Flask(__name__)
+app.register_blueprint(vehicles_bp, url_prefix="/")
+
+# Needed for flashing messages used across your app (e.g., in vehicles.py)
+# You can move this to env if you prefer.
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
+
+
+
+@app.errorhandler(404)
+def handle_404(e):
+    status = 404
+    message = getattr(e, "description", "The requested resource was not found.")
+    return render_template("errors/404.html", message=message), status
+
+@app.errorhandler(HTTPException)
+def handle_http_exception(e: HTTPException):
+    """All other HTTP* (e.g., 400, 403, 405, etc.)."""
+    status = e.code or 500
+    message = e.description or "An unexpected error occurred."
+    # Try a specific template (e.g., errors/403.html); fall back to generic.
+    specific = f"errors/{status}.html"
+    try:
+        return render_template(specific, message=message), status
+    except Exception:
+        return render_template("errors/generic.html", status=status, message=message), status
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Non-HTTP exceptions (code bugs, DB errors, etc.)."""
+    status = 500
+    # Log the traceback in debug or to your logger
+    traceback.print_exc()
+    return render_template("errors/500.html"), status
+
+if __name__ == "__main__":
+    # Keep debug for dev; in production, use a WSGI server and disable debug
+    app.run(debug=True)
