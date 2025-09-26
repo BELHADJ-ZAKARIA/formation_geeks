@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit {{ vehicle.make }} {{ vehicle.model }}{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="h3 mb-4">Edit Vehicle</h1>
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form method="post">
+            <div class="mb-3">
+              <label for="vin" class="form-label">VIN (17 chars)</label>
+              <input type="text" class="form-control" id="vin" name="vin" required minlength="17" maxlength="17" value="{{ vehicle.vin }}">
+            </div>
+
+            <div class="mb-3">
+              <label for="make" class="form-label">Make</label>
+              <input type="text" class="form-control" id="make" name="make" required value="{{ vehicle.make }}">
+            </div>
+
+            <div class="mb-3">
+              <label for="model" class="form-label">Model</label>
+              <input type="text" class="form-control" id="model" name="model" required value="{{ vehicle.model }}">
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="year" class="form-label">Year</label>
+                <input type="number" class="form-control" id="year" name="year" required min="1900" max="2100" value="{{ vehicle.year }}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" class="form-control" id="price" name="price" required step="0.01" min="0" value="{{ vehicle.price }}">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="color" class="form-label">Color (Optional)</label>
+              <input type="text" class="form-control" id="color" name="color" value="{{ vehicle.color or '' }}">
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+              <a href="{{ url_for('vehicles.index') }}" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-success">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

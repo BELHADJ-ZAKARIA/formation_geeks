@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Inventory Statistics{% endblock %}
+
+{% block content %}
+  <h1 class="h2 mb-4">Inventory Statistics</h1>
+
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card text-center h-100 shadow-sm">
+        <div class="card-header">Total Vehicles in Stock</div>
+        <div class="card-body">
+          <p class="display-4 fw-bold">{{ total_vehicles }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header">Vehicles by Make</div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            {% for item in vehicles_by_make %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ item.make }}
+                <span class="badge bg-primary rounded-pill">{{ item.make_count }}</span>
+              </li>
+            {% else %}
+              <li class="list-group-item">No data available.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header">Most Expensive Vehicle</div>
+        {% if most_expensive %}
+          <div class="card-body">
+            <h5 class="card-title">{{ most_expensive.year }} {{ most_expensive.make }} {{ most_expensive.model }}</h5>
+            <p class="card-text fw-bold text-success h4">${{ "{:,.2f}".format(most_expensive.price) }}</p>
+            <a href="{{ url_for('vehicles.details', vehicle_id=most_expensive.id) }}" class="btn btn-sm btn-outline-secondary">View Details</a>
+          </div>
+        {% else %}
+          <div class="card-body"><p class="card-text">No data available.</p></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header">Least Expensive Vehicle</div>
+        {% if least_expensive %}
+          <div class="card-body">
+            <h5 class="card-title">{{ least_expensive.year }} {{ least_expensive.make }} {{ least_expensive.model }}</h5>
+            <p class="card-text fw-bold text-success h4">${{ "{:,.2f}".format(least_expensive.price) }}</p>
+            <a href="{{ url_for('vehicles.details', vehicle_id=least_expensive.id) }}" class="btn btn-sm btn-outline-secondary">View Details</a>
+          </div>
+        {% else %}
+          <div class="card-body"><p class="card-text">No data available.</p></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

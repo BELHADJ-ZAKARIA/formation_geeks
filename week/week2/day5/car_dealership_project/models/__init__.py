@@ -1,0 +1,3 @@
+from .vehicles import vehicles_bp
+
+__all__ = ["vehicles_bp"]
