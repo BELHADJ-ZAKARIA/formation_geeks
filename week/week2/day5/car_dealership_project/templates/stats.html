@@ -85,7 +85,7 @@
       </div>
     </div>
 
-    <!-- (Optional) Bar: Average Price by Make (full width under) -->
+    <!-- Bar: Average Price by Make (full width) -->
     <div class="bg-white border rounded-xl shadow-sm p-4 xl:col-span-3">
       <div class="flex items-center justify-between mb-2">
         <h2 class="font-semibold">Average Price by Make</h2>
@@ -96,86 +96,21 @@
     </div>
   </div>
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    // Data from backend
-    const labelsMake      = {{ labels_make|tojson }};
-    const countsMake      = {{ counts_make|tojson }};
-    const labelsYear      = {{ labels_year|tojson }};
-    const countsYear      = {{ counts_year|tojson }};
-    const bucketLabels    = {{ bucket_labels|tojson }};
-    const bucketCounts    = {{ bucket_counts|tojson }};
-    const labelsAvgMake   = {{ labels_avg_make|tojson }};
-    const valuesAvgMake   = {{ values_avg_make|tojson }};
-
-    // Helpers
-    const fmt = n => (typeof n === 'number')
-      ? n.toLocaleString('en-US')
-      : n;
-
-    const dh = n => `${fmt(n)} DH`;
-
-    const commonOpts = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: true, position: 'bottom' },
-        tooltip: { callbacks: { label: (ctx) => {
-          const v = ctx.raw;
-          // If this is the AvgPrice or a doughnut label with numbers, format as money
-          if (ctx.chart.canvas.id === 'chartAvgPrice') return `${ctx.label}: ${dh(v)}`;
-          if (ctx.chart.canvas.id === 'chartBuckets')  return `${ctx.label}: ${fmt(v)}`;
-          return `${ctx.dataset.label || ''} ${fmt(v)}`;
-        }}}
-      },
-      scales: {
-        x: { ticks: { maxRotation: 0, autoSkip: true }},
-        y: { beginAtZero: true, ticks: { callback: (val)=>fmt(val) } }
-      }
-    };
-
-    // Chart 1: Vehicles by Make (bar)
-    new Chart(document.getElementById('chartByMake'), {
-      type: 'bar',
-      data: {
-        labels: labelsMake,
-        datasets: [{ label: 'Count', data: countsMake }]
-      },
-      options: commonOpts
-    });
-
-    // Chart 2: Vehicles by Year (line)
-    new Chart(document.getElementById('chartByYear'), {
-      type: 'line',
-      data: {
-        labels: labelsYear,
-        datasets: [{ label: 'Count', data: countsYear, fill: false, tension: 0.2 }]
-      },
-      options: commonOpts
-    });
-
-    // Chart 3: Price Buckets (doughnut)
-    new Chart(document.getElementById('chartBuckets'), {
-      type: 'doughnut',
-      data: {
-        labels: bucketLabels,
-        datasets: [{ data: bucketCounts }]
-      },
-      options: {
-        ...commonOpts,
-        scales: undefined // doughnut doesn't use axes
-      }
-    });
-
-    // Chart 4: Average Price by Make (bar)
-    new Chart(document.getElementById('chartAvgPrice'), {
-      type: 'bar',
-      data: {
-        labels: labelsAvgMake,
-        datasets: [{ label: 'Avg Price (DH)', data: valuesAvgMake }]
-      },
-      options: commonOpts
-    });
+  <!-- Backend data as JSON (safe defaults avoid syntax errors) -->
+  <script id="stats-json" type="application/json">
+  {
+    "labelsMake":    {{ labels_make     | default([], true) | tojson }},
+    "countsMake":    {{ counts_make     | default([], true) | tojson }},
+    "labelsYear":    {{ labels_year     | default([], true) | tojson }},
+    "countsYear":    {{ counts_year     | default([], true) | tojson }},
+    "bucketLabels":  {{ bucket_labels   | default([], true) | tojson }},
+    "bucketCounts":  {{ bucket_counts   | default([], true) | tojson }},
+    "labelsAvgMake": {{ labels_avg_make | default([], true) | tojson }},
+    "valuesAvgMake": {{ values_avg_make | default([], true) | tojson }}
+  }
   </script>
+
+  <!-- Libraries (order matters) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="{{ url_for('static', filename='js/chart.js') }}" defer></script>
 {% endblock %}
