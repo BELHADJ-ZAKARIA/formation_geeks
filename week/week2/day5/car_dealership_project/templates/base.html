@@ -29,6 +29,9 @@
           <li><a href="{{ url_for('vehicles.index') }}"
                  class="px-3 py-1.5 rounded-md hover:bg-white/10 {% if request.endpoint == 'vehicles.index' %}bg-white/10{% endif %}">
             Inventory</a></li>
+          <li><a href="{{ url_for('salespeople.index') }}"
+                 class="px-3 py-1.5 rounded-md hover:bg-fuchsia-400/20 hover:text-fuchsia-200 {% if request.endpoint and request.endpoint.startswith('salespeople.') %}bg-white/10{% endif %}">
+            Salespeople </a></li>
           <li><a href="{{ url_for('vehicles.stats') }}"
                  class="px-3 py-1.5 rounded-md hover:bg-amber-400/20 hover:text-amber-200 {% if request.endpoint == 'vehicles.stats' %}bg-white/10{% endif %}">
             Stats</a></li>

@@ -80,12 +80,30 @@ def search():
 
 @vehicles_bp.route('/<int:vehicle_id>')
 def details(vehicle_id):
-    """Shows the details of a single vehicle."""
-    vehicle = get_vehicle(vehicle_id)
-    if vehicle is None:
-        flash('Vehicle not found or database error.', 'error')
+    conn = get_db_connection()
+    if conn is None:
+        flash("ERROR: Could not connect to the database.", "error")
         return redirect(url_for('vehicles.index'))
-    return render_template('details.html', vehicle=vehicle)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM vehicles WHERE id=%s", (vehicle_id,))
+    vehicle = cur.fetchone()
+    if not vehicle:
+        cur.close(); conn.close()
+        flash("Vehicle not found.", "error")
+        return redirect(url_for('vehicles.index'))
+
+    cur.execute("""
+      SELECT s.id, s.sale_date, s.sale_price,
+             c.name AS customer_name,
+             sp.name AS salesperson_name
+      FROM sales s
+      JOIN customers c ON c.id = s.customer_id
+      LEFT JOIN salespeople sp ON sp.id = s.salesperson_id
+      WHERE s.vehicle_id = %s
+    """, (vehicle_id,))
+    sale = cur.fetchone()
+    cur.close(); conn.close()
+    return render_template('details.html', vehicle=vehicle, sale=sale)
 
 @vehicles_bp.route('/create', methods=('GET', 'POST'))
 def create():

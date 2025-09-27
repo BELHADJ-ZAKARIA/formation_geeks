@@ -84,15 +84,26 @@ INSERT INTO vehicles (vin, make, model, year, price, color, photo_url) VALUES
 ('3G1FY5EJOA7878787', 'Subaru', 'Outback', 2022, 32000.00, 'Blue', 'https://hips.hearstapps.com/hmg-prod/images/2026-subaru-outback-exterior-pr-101-67fd3bbed84b1.jpg?crop=0.699xw:0.524xh;0.106xw,0.336xh&resize=640:*'),
 ('1G1FY6EJOA9090909', 'Mazda', 'CX-5', 2023, 28000.00, 'Red', 'https://www.motorbiscuit.com/wp-content/uploads/2022/12/2023-Mazda-CX-5.jpg'),
 ('JTMDE78D93UD783HD', 'Tesla', 'Model 3', 2023, 42000.00, 'White', 'https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/eghq9ct3evxunl27bkhl.jpg'),
-('YHS83UD92JD92HD83', 'BMW', 'X5', 2022, 65000.00, 'Black', 'https://www.leguideauto.ma/contents/cars/pictures/2021/12/large/zIlKCzYSXPyDVeyjliHEE8vk1kmk1id9JjFk36IF.webp');
+('YHS83UD92JD92HD83', 'BMW', 'X5', 2022, 65000.00, 'Black', 'https://www.leguideauto.ma/contents/cars/pictures/2021/12/large/zIlKCzYSXPyDVeyjliHEE8vk1kmk1id9JjFk36IF.webp'),
+('5XXGM4A74DG116120','Dacia','Duster',2025,220000.00,'Grey','https://journalauto.com/wp-content/uploads/2023/11/1-Dacia-Duster-Journey-Guincho.jpg');
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_sales_vehicle ON sales(vehicle_id);
+
+ALTER TABLE salespeople ADD COLUMN IF NOT EXISTS phone VARCHAR(30);
+ALTER TABLE salespeople ADD COLUMN IF NOT EXISTS photo_url TEXT;
+
+ALTER TABLE salespeople
+  ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE;
+
+CREATE INDEX IF NOT EXISTS idx_salespeople_is_active ON salespeople(is_active);
 
 -- Insert Sample Salespeople
-INSERT INTO salespeople (name, email) VALUES
-('Alice Johnson', 'alice.j@cardealz.com'),
-('Bob Smith', 'bob.s@cardealz.com'),
-('Charlie Brown', 'charlie.b@cardealz.com'),
-('Diana Prince', 'diana.p@cardealz.com'),
-('Ethan Hunt', 'ethan.h@cardealz.com');
+INSERT INTO salespeople (name, email, phone, photo_url) VALUES
+('Alice Johnson', 'alice.j@cardealz.com', '06 63 94 56 78', 'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvczkzLXBhLTU3OTgtam9iNTgzXzEuanBn.jpg'),
+('Bob Smith', 'bob.s@cardealz.com', '06 72 44 96 78', 'https://media.gettyimages.com/id/1752533660/video/happy-worker-and-face-of-business-asian-man-in-office-with-pride-confidence-and-ambition-in.jpg?s=640x640&k=20&c=FPPyepfVwPRmGudzLY-RkfVPiT1lPE_wBZ2WQZVGUOM='),
+('Charlie Brown', 'charlie.b@cardealz.com', '06 72 34 00 78', 'https://media.istockphoto.com/id/2148808575/photo/smile-portrait-and-businessman-with-confidence-in-office-workspace-and-professional-with.jpg?s=612x612&w=0&k=20&c=bjWqgkX7WdWNPNTv0BM3T7ort8xM6VMAK4GDLmTVfLU='),
+('Diana Prince', 'diana.p@cardealz.com', '06 70 34 26 78', 'https://img.freepik.com/free-photo/portrait-business-woman-with-enthusiastic-face-expression-smiling-looking-confident-standing-s_1258-88087.jpg'),
+('Ethan Hunt', 'ethan.h@cardealz.com', '06 66 34 56 78', 'https://media.istockphoto.com/id/1040308104/photo/mature-handsome-business-man.jpg?s=612x612&w=0&k=20&c=QbyH3XFmLOoy8NESjLQC8PYsm6g3UBL6COFaF-Qnnbk=');
 
 -- Insert Sample Customers
 INSERT INTO customers (name, phone_number) VALUES
@@ -118,3 +129,5 @@ INSERT INTO sales (vehicle_id, salesperson_id, customer_id, sale_date, sale_pric
 (8, 5, 7, '2023-11-05', 28500.00),
 (10, 2, 6, '2023-11-10', 27500.00),
 (12, 4, 8, '2023-11-12', 64000.00);
+
+ALTER TABLE salespeople ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE;
