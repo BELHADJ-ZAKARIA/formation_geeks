@@ -11,11 +11,7 @@ load_dotenv()
 app = Flask(__name__)
 app.register_blueprint(vehicles_bp, url_prefix="/")
 
-# Needed for flashing messages used across your app (e.g., in vehicles.py)
-# You can move this to env if you prefer.
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
-
-
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 @app.errorhandler(404)
 def handle_404(e):
