@@ -42,3 +42,4 @@ def handle_exception(e):
 if __name__ == "__main__":
     # Keep debug for dev; in production, use a WSGI server and disable debug
     app.run(debug=True)
+    
