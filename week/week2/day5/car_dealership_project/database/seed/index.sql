@@ -16,7 +16,8 @@ CREATE TABLE vehicles (
   model VARCHAR(50) NOT NULL,
   year INT NOT NULL,
   price NUMERIC(10, 2) NOT NULL,
-  color VARCHAR(30)
+  color VARCHAR(30),
+  photo_url TEXT
 );
 
 -- -----------------------------------------------------
@@ -71,19 +72,19 @@ CREATE TABLE sales (
 -- -----------------------------------------------------
 
 -- Insert Sample Vehicles
-INSERT INTO vehicles (vin, make, model, year, price, color) VALUES
-('1G1FY1EJOA1234567', 'Toyota', 'Camry', 2022, 25000.00, 'Silver'),
-('2G1FW1EJOA7654321', 'Honda', 'Civic', 2023, 22000.00, 'Black'),
-('3G1FY1EJOA1122334', 'Ford', 'F-150', 2021, 45000.00, 'Red'),
-('1G1FY2EJOA5566778', 'Chevrolet', 'Silverado', 2022, 48000.00, 'Blue'),
-('2G1FW2EJOA9988776', 'Nissan', 'Altima', 2023, 24000.00, 'White'),
-('3G1FY3EJOA1212121', 'Jeep', 'Wrangler', 2022, 35000.00, 'Green'),
-('1G1FY4EJOA3434343', 'Hyundai', 'Sonata', 2023, 26000.00, 'Gray'),
-('2G1FW3EJOA5656565', 'Kia', 'Sorento', 2021, 29000.00, 'Silver'),
-('3G1FY5EJOA7878787', 'Subaru', 'Outback', 2022, 32000.00, 'Blue'),
-('1G1FY6EJOA9090909', 'Mazda', 'CX-5', 2023, 28000.00, 'Red'),
-('JTMDE78D93UD783HD', 'Tesla', 'Model 3', 2023, 42000.00, 'White'),
-('YHS83UD92JD92HD83', 'BMW', 'X5', 2022, 65000.00, 'Black');
+INSERT INTO vehicles (vin, make, model, year, price, color, photo_url) VALUES
+('1G1FY1EJOA1234567', 'Toyota', 'Camry', 2022, 25000.00, 'Silver','https://www.edmunds.com/assets/m/cs/blt95cf4db396c717b7/672bda61733622566a9c6cac/2024-toyota-camry-actf34.jpg'),
+('2G1FW1EJOA7654321', 'Honda', 'Civic', 2023, 22000.00, 'Black', 'https://www.thecarexpert.co.uk/wp-content/uploads/2019/04/Honda-Civic-2018-wallpaper-2133x1200-cropped.jpeg'),
+('3G1FY1EJOA1122334', 'Ford', 'F-150', 2021, 45000.00, 'Red', 'https://d2v1gjawtegg5z.cloudfront.net/posts/preview_images/000/015/499/original/2024_Ford_F-150.jpg?1725030127'),
+('1G1FY2EJOA5566778', 'Chevrolet', 'Silverado', 2022, 48000.00, 'Blue', 'https://cimg3.ibsrv.net/ibimg/hgm/1920x1080-1/100/926/2024-chevrolet-silverado-fox-factory-edition_100926615.jpg'),
+('2G1FW2EJOA9988776', 'Nissan', 'Altima', 2023, 24000.00, 'White', 'https://di-uploads-pod27.dealerinspire.com/cbsqualitycars/uploads/2020/11/Used-Nissan-Altima-2015-Nissan-Altima-front.jpg'),
+('3G1FY3EJOA1212121', 'Jeep', 'Wrangler', 2022, 35000.00, 'Green', 'https://hips.hearstapps.com/hmg-prod/images/2024-jeep-wrangler114-649ade7362678.jpg?crop=0.784xw:0.589xh;0.152xw,0.279xh&resize=1200:*'),
+('1G1FY4EJOA3434343', 'Hyundai', 'Sonata', 2023, 26000.00, 'Gray', 'https://di-uploads-pod33.dealerinspire.com/universalhyundai/uploads/2023/06/Universal-Hyundai-Hyundai-Sonata.png'),
+('2G1FW3EJOA5656565', 'Kia', 'Sorento', 2021, 29000.00, 'Silver', 'https://www.edmunds.com/assets/m/cs/blt98aa53c5d0c153b0/674f4da385394b2ab32be7d1/2025-kia-sorento-hybrid-f34.jpg'),
+('3G1FY5EJOA7878787', 'Subaru', 'Outback', 2022, 32000.00, 'Blue', 'https://hips.hearstapps.com/hmg-prod/images/2026-subaru-outback-exterior-pr-101-67fd3bbed84b1.jpg?crop=0.699xw:0.524xh;0.106xw,0.336xh&resize=640:*'),
+('1G1FY6EJOA9090909', 'Mazda', 'CX-5', 2023, 28000.00, 'Red', 'https://www.motorbiscuit.com/wp-content/uploads/2022/12/2023-Mazda-CX-5.jpg'),
+('JTMDE78D93UD783HD', 'Tesla', 'Model 3', 2023, 42000.00, 'White', 'https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/eghq9ct3evxunl27bkhl.jpg'),
+('YHS83UD92JD92HD83', 'BMW', 'X5', 2022, 65000.00, 'Black', 'https://www.leguideauto.ma/contents/cars/pictures/2021/12/large/zIlKCzYSXPyDVeyjliHEE8vk1kmk1id9JjFk36IF.webp');
 
 -- Insert Sample Salespeople
 INSERT INTO salespeople (name, email) VALUES
