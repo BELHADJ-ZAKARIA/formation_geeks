@@ -1,40 +1,32 @@
 {% extends 'base.html' %}
-
 {% block title %}{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}{% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
-          <h2 class="h5 mb-0">Vehicle Details</h2>
-        </div>
-        <div class="card-body">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <strong>Make:</strong><span>{{ vehicle.make }}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <strong>Model:</strong><span>{{ vehicle.model }}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <strong>Year:</strong><span>{{ vehicle.year }}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <strong>VIN:</strong><span class="font-monospace">{{ vehicle.vin }}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <strong>Color:</strong><span>{{ vehicle.color or 'N/A' }}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <strong>Price:</strong><span class="fw-bold text-success h5 mb-0">${{ "{:,.2f}".format(vehicle.price) }}</span>
-            </li>
-          </ul>
-        </div>
-        <div class="card-footer d-flex justify-content-end gap-2">
-          <a href="{{ url_for('vehicles.index') }}" class="btn btn-secondary">Back</a>
-          <a href="{{ url_for('vehicles.edit', vehicle_id=vehicle.id) }}" class="btn btn-primary">Edit</a>
-        </div>
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-white border rounded-xl shadow-sm overflow-hidden">
+      {% if vehicle.photo_url %}
+        <img src="{{ vehicle.photo_url }}" alt="{{ vehicle.make }} {{ vehicle.model }}"
+             class="h-96 w-full object-cover" loading="lazy" decoding="async"
+             onerror="this.style.display='none'">
+      {% endif %}
+      <div class="px-4 py-3 bg-zinc-900 text-white">
+        <h2 class="text-lg font-semibold">Vehicle Details</h2>
+      </div>
+
+      <div class="p-4">
+        <dl class="divide-y divide-gray-200">
+          <div class="py-3 flex justify-between"><dt class="font-medium">Make:</dt><dd>{{ vehicle.make }}</dd></div>
+          <div class="py-3 flex justify-between"><dt class="font-medium">Model:</dt><dd>{{ vehicle.model }}</dd></div>
+          <div class="py-3 flex justify-between"><dt class="font-medium">Year:</dt><dd>{{ vehicle.year }}</dd></div>
+          <div class="py-3 flex justify-between"><dt class="font-medium">VIN:</dt><dd class="font-mono text-sm">{{ vehicle.vin }}</dd></div>
+          <div class="py-3 flex justify-between"><dt class="font-medium">Color:</dt><dd>{{ vehicle.color or 'N/A' }}</dd></div>
+          <div class="py-3 flex justify-between"><dt class="font-medium">Price:</dt><dd class="font-semibold text-emerald-600">{{ "{:,.2f}".format(vehicle.price) }} DH</dd></div>
+        </dl>
+      </div>
+
+      <div class="px-4 py-3 border-t bg-gray-50 flex justify-end gap-2">
+        <a href="{{ url_for('vehicles.index') }}" class="px-3 py-2 rounded-md border text-sm hover:bg-gray-100">Back</a>
+        <a href="{{ url_for('vehicles.edit', vehicle_id=vehicle.id) }}" class="px-3 py-2 rounded-md bg-brand hover:bg-brand-dark text-white text-sm">Edit</a>
       </div>
     </div>
   </div>

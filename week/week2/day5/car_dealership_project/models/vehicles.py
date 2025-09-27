@@ -97,8 +97,9 @@ def create():
         year = request.form['year']
         price = request.form['price']
         color = request.form['color']
+        photo_url = request.form.get("photo_url")
         
-        if not all([vin, make, model, year, price]):
+        if not all([vin, make, model, year, price, photo_url]):
             flash('All fields except color are required!', 'error')
         else:
             conn = get_db_connection()
@@ -107,8 +108,8 @@ def create():
                 return redirect(url_for('vehicles.index'))
 
             cursor = conn.cursor()
-            cursor.execute('INSERT INTO vehicles (vin, make, model, year, price, color) VALUES (%s, %s, %s, %s, %s, %s)',
-                           (vin, make, model, year, price, color))
+            cursor.execute('INSERT INTO vehicles (vin, make, model, year, price, color, photo_url) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                           (vin, make, model, year, price, color, photo_url))
             conn.commit()
             cursor.close()
             conn.close()
@@ -132,8 +133,9 @@ def edit(vehicle_id):
         year = request.form['year']
         price = request.form['price']
         color = request.form['color']
+        photo_url = request.form.get("photo_url")
         
-        if not all([vin, make, model, year, price]):
+        if not all([vin, make, model, year, price, photo_url]):
             flash('All fields except color are required!', 'error')
         else:
             conn = get_db_connection()
@@ -142,8 +144,8 @@ def edit(vehicle_id):
                 return redirect(url_for('vehicles.index'))
                 
             cursor = conn.cursor()
-            cursor.execute('UPDATE vehicles SET vin = %s, make = %s, model = %s, year = %s, price = %s, color = %s WHERE id = %s',
-                           (vin, make, model, year, price, color, vehicle_id))
+            cursor.execute('UPDATE vehicles SET vin = %s, make = %s, model = %s, year = %s, price = %s, color = %s, photo_url = %s WHERE id = %s',
+                           (vin, make, model, year, price, color, photo_url, vehicle_id))
             conn.commit()
             cursor.close()
             conn.close()
