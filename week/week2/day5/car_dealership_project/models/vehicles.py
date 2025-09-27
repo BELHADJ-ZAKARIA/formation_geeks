@@ -80,12 +80,30 @@ def search():
 
 @vehicles_bp.route('/<int:vehicle_id>')
 def details(vehicle_id):
-    """Shows the details of a single vehicle."""
-    vehicle = get_vehicle(vehicle_id)
-    if vehicle is None:
-        flash('Vehicle not found or database error.', 'error')
+    conn = get_db_connection()
+    if conn is None:
+        flash("ERROR: Could not connect to the database.", "error")
         return redirect(url_for('vehicles.index'))
-    return render_template('details.html', vehicle=vehicle)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM vehicles WHERE id=%s", (vehicle_id,))
+    vehicle = cur.fetchone()
+    if not vehicle:
+        cur.close(); conn.close()
+        flash("Vehicle not found.", "error")
+        return redirect(url_for('vehicles.index'))
+
+    cur.execute("""
+      SELECT s.id, s.sale_date, s.sale_price,
+             c.name AS customer_name,
+             sp.name AS salesperson_name
+      FROM sales s
+      JOIN customers c ON c.id = s.customer_id
+      LEFT JOIN salespeople sp ON sp.id = s.salesperson_id
+      WHERE s.vehicle_id = %s
+    """, (vehicle_id,))
+    sale = cur.fetchone()
+    cur.close(); conn.close()
+    return render_template('details.html', vehicle=vehicle, sale=sale)
 
 @vehicles_bp.route('/create', methods=('GET', 'POST'))
 def create():
@@ -178,37 +196,98 @@ def delete(vehicle_id):
 
 @vehicles_bp.route('/stats')
 def stats():
-    """Shows statistics about the vehicle inventory."""
     conn = get_db_connection()
     if conn is None:
         flash("ERROR: Could not connect to the database.", "error")
         return redirect(url_for('vehicles.index'))
 
-    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur = conn.cursor()
 
-    # 1. Get total number of vehicles
-    cursor.execute('SELECT COUNT(*) AS total_count FROM vehicles')
-    total_vehicles = cursor.fetchone()['total_count']
+    # 1) KPIs
+    cur.execute("SELECT COUNT(*) AS cnt, COALESCE(SUM(price),0) AS total_value FROM vehicles")
+    row = cur.fetchone()
+    total_vehicles = row["cnt"] if row else 0
+    inventory_value = float(row["total_value"]) if row else 0.0
 
-    # 2. Get count of vehicles by make
-    cursor.execute('SELECT make, COUNT(id) AS make_count FROM vehicles GROUP BY make ORDER BY make')
-    vehicles_by_make = cursor.fetchall()
+    # 2) Vehicles by make (bar)
+    cur.execute("""
+        SELECT make, COUNT(*) AS make_count
+        FROM vehicles
+        GROUP BY make
+        ORDER BY make;
+    """)
+    vbymake = cur.fetchall()
+    labels_make = [r["make"] for r in vbymake]
+    counts_make = [int(r["make_count"]) for r in vbymake]
 
-    # 3. Get the most expensive vehicle
-    cursor.execute('SELECT * FROM vehicles ORDER BY price DESC LIMIT 1')
-    most_expensive = cursor.fetchone()
+    # 3) Average price by make (bar)
+    cur.execute("""
+        SELECT make, ROUND(AVG(price)::numeric, 2) AS avg_price
+        FROM vehicles
+        GROUP BY make
+        ORDER BY avg_price DESC;
+    """)
+    avgpm = cur.fetchall()
+    labels_avg_make = [r["make"] for r in avgpm]
+    values_avg_make = [float(r["avg_price"]) for r in avgpm]
 
-    # 4. Get the least expensive vehicle
-    cursor.execute('SELECT * FROM vehicles ORDER BY price ASC LIMIT 1')
-    least_expensive = cursor.fetchone()
+    # 4) Vehicles by year (line)
+    cur.execute("""
+        SELECT year, COUNT(*) AS cnt
+        FROM vehicles
+        GROUP BY year
+        ORDER BY year;
+    """)
+    vbyyear = cur.fetchall()
+    labels_year = [int(r["year"]) for r in vbyyear]
+    counts_year = [int(r["cnt"]) for r in vbyyear]
 
-    cursor.close()
+    # 5) Price buckets (doughnut)
+    cur.execute("""
+        WITH b AS (
+          SELECT CASE
+              WHEN price < 10000 THEN 'Under 10k'
+              WHEN price < 20000 THEN '10k–20k'
+              WHEN price < 30000 THEN '20k–30k'
+              WHEN price < 40000 THEN '30k–40k'
+              ELSE '40k+'
+            END AS bucket
+          FROM vehicles
+        )
+        SELECT bucket, COUNT(*) AS cnt
+        FROM b
+        GROUP BY bucket
+        ORDER BY CASE bucket
+          WHEN 'Under 10k' THEN 1
+          WHEN '10k–20k' THEN 2
+          WHEN '20k–30k' THEN 3
+          WHEN '30k–40k' THEN 4
+          ELSE 5
+        END;
+    """)
+    pb = cur.fetchall()
+    bucket_labels = [r["bucket"] for r in pb]
+    bucket_counts = [int(r["cnt"]) for r in pb]
+
+    # 6) Most/least expensive (cards)
+    cur.execute("SELECT * FROM vehicles ORDER BY price DESC LIMIT 1")
+    most_expensive = cur.fetchone()
+    cur.execute("SELECT * FROM vehicles ORDER BY price ASC LIMIT 1")
+    least_expensive = cur.fetchone()
+
+    cur.close()
     conn.close()
 
     return render_template(
-        'stats.html',
+        "stats.html",
         total_vehicles=total_vehicles,
-        vehicles_by_make=vehicles_by_make,
+        inventory_value=inventory_value,
+        vehicles_by_make=vbymake,
         most_expensive=most_expensive,
-        least_expensive=least_expensive
+        least_expensive=least_expensive,
+        # chart data
+        labels_make=labels_make, counts_make=counts_make,
+        labels_avg_make=labels_avg_make, values_avg_make=values_avg_make,
+        labels_year=labels_year, counts_year=counts_year,
+        bucket_labels=bucket_labels, bucket_counts=bucket_counts
     )

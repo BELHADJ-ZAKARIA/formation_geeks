@@ -15,26 +15,51 @@
   <!-- NAVBAR -->
   <nav class="bg-zinc-900 text-white">
     <div class="container mx-auto px-4 h-14 flex items-center gap-4">
+      <!-- Brand -->
       <a href="{{ url_for('vehicles.index') }}" class="font-semibold tracking-wide whitespace-nowrap">
         Dealership Pro
       </a>
 
-      <ul class="hidden md:flex items-center gap-6 ml-6">
-        <li><a href="{{ url_for('vehicles.index') }}"
-               class="px-3 py-1.5 rounded-md hover:bg-white/10 {% if request.endpoint == 'vehicles.index' %}bg-white/10{% endif %}">
-          Inventory</a></li>
-        <li><a href="{{ url_for('vehicles.stats') }}"
-               class="px-3 py-1.5 rounded-md hover:bg-amber-400/20 hover:text-amber-200 {% if request.endpoint == 'vehicles.stats' %}bg-white/10{% endif %}">
-          Stats</a></li>
-      </ul>
+      <!-- Mobile toggle -->
+      <button id="menu-btn" class="md:hidden ml-auto px-3 py-2 rounded hover:bg-white/10" aria-label="Toggle menu">☰</button>
 
-      <div class="ml-auto flex items-center gap-3">
-        <form action="{{ url_for('vehicles.search') }}" method="get" class="hidden md:flex">
+      <!-- Desktop: links + search -->
+      <div class="hidden md:flex items-center gap-6 ml-auto">
+        <ul class="flex items-center gap-6">
+          <li><a href="{{ url_for('vehicles.index') }}"
+                 class="px-3 py-1.5 rounded-md hover:bg-white/10 {% if request.endpoint == 'vehicles.index' %}bg-white/10{% endif %}">
+            Inventory</a></li>
+          <li><a href="{{ url_for('salespeople.index') }}"
+                 class="px-3 py-1.5 rounded-md hover:bg-fuchsia-400/20 hover:text-fuchsia-200 {% if request.endpoint and request.endpoint.startswith('salespeople.') %}bg-white/10{% endif %}">
+            Salespeople </a></li>
+          <li><a href="{{ url_for('vehicles.stats') }}"
+                 class="px-3 py-1.5 rounded-md hover:bg-amber-400/20 hover:text-amber-200 {% if request.endpoint == 'vehicles.stats' %}bg-white/10{% endif %}">
+            Stats</a></li>
+        </ul>
+
+        <!-- Desktop search -->
+        <form action="{{ url_for('vehicles.search') }}" method="get" class="flex items-center gap-2">
           <input name="query" value="{{ search_query or '' }}" placeholder="Search make or model"
-                 class="h-10 w-64 rounded-l-md border border-zinc-600 bg-zinc-800/70 text-sm px-3 text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand">
-          <button class="h-10 rounded-r-md bg-brand hover:bg-brand-dark px-3 text-sm">Search</button>
+                 class="h-10 w-64 rounded-md border border-zinc-600 bg-zinc-800/70 text-sm px-3 text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand">
+          <button class="h-10 rounded-md bg-brand hover:bg-brand-dark px-3 text-sm">Search</button>
         </form>
       </div>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <div id="menu" class="hidden md:hidden px-4 pb-3 border-t border-white/10">
+      <ul class="flex flex-col gap-1 py-3">
+        <li><a href="{{ url_for('vehicles.index') }}" class="block px-3 py-2 rounded hover:bg-white/10">Inventory</a></li>
+        <li><a href="{{ url_for('vehicles.create') }}" class="block px-3 py-2 rounded hover:bg-emerald-400/20 hover:text-emerald-200">Add Vehicle</a></li>
+        <li><a href="{{ url_for('vehicles.stats') }}" class="block px-3 py-2 rounded hover:bg-amber-400/20 hover:text-amber-200">Stats</a></li>
+      </ul>
+
+      <!-- Mobile search -->
+      <form action="{{ url_for('vehicles.search') }}" method="get" class="mt-2 flex gap-2">
+        <input name="query" value="{{ search_query or '' }}" placeholder="Search make or model"
+               class="h-10 w-full rounded-md border border-zinc-600 bg-zinc-800/70 text-sm px-3 text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand">
+        <button class="h-10 rounded-md bg-brand hover:bg-brand-dark px-3 text-sm">Search</button>
+      </form>
     </div>
   </nav>
 
@@ -58,5 +83,10 @@
   <main class="container mx-auto px-4 py-8">
     {% block content %}{% endblock %}
   </main>
+  <script>
+    document.getElementById('menu-btn')?.addEventListener('click', () => {
+      document.getElementById('menu')?.classList.toggle('hidden');
+    });
+  </script>
 </body>
 </html>

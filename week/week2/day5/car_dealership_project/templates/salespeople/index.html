@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}Salespeople{% endblock %}
+
+{% block content %}
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-semibold">
+      Salespeople
+      {% if show == 'archived' %}
+        <span class="text-sm text-gray-500">(archived)</span>
+      {% endif %}
+    </h1>
+
+    <div class="flex items-center gap-2">
+      {% if show != 'archived' %}
+        <!-- Toggle to archived view -->
+        <a href="{{ url_for('salespeople.index', show='archived') }}"
+           class="inline-flex items-center gap-2 h-10 px-3 rounded-lg border border-amber-300
+                  text-amber-800 bg-amber-50 hover:bg-amber-100 hover:border-amber-400
+                  shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400/50">
+          <!-- archive icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M3 7h18M5 7v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7M8 11h8" />
+          </svg>
+          Show archived
+        </a>
+      {% else %}
+        <!-- Toggle back to active view -->
+        <a href="{{ url_for('salespeople.index') }}"
+           class="inline-flex items-center gap-2 h-10 px-3 rounded-lg border border-emerald-300
+                  text-emerald-800 bg-emerald-50 hover:bg-emerald-100 hover:border-emerald-400
+                  shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400/50">
+          <!-- check icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+          Show active
+        </a>
+      {% endif %}
+
+      <a href="{{ url_for('salespeople.create') }}"
+         class="inline-flex items-center h-10 px-3 rounded-lg bg-brand hover:bg-brand-dark text-white text-sm shadow-sm">
+        + Add Salesperson
+      </a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {% for sp in people %}
+      <div class="bg-white border rounded-xl shadow-sm overflow-hidden flex flex-col">
+        {% if sp.photo_url %}
+          <img src="{{ sp.photo_url }}" alt="{{ sp.name }}" class="h-40 w-full object-cover"
+               loading="lazy" decoding="async" onerror="this.style.display='none'">
+        {% else %}
+          <div class="h-40 w-full flex items-center justify-center bg-gradient-to-br from-zinc-200 to-zinc-300">
+            <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center text-xl font-semibold text-zinc-700">
+              {{ sp.name[0]|upper }}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="p-4 flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <h3 class="font-semibold">{{ sp.name }}</h3>
+            {% if sp.is_active is defined and not sp.is_active %}
+              <span class="text-xs px-2 py-0.5 rounded bg-amber-100 text-amber-700">Archived</span>
+            {% endif %}
+          </div>
+          <p class="text-sm text-gray-600">{{ sp.email }}</p>
+          {% if sp.phone %}<p class="text-sm text-gray-500">{{ sp.phone }}</p>{% endif %}
+
+          <div class="mt-3 flex gap-2 flex-wrap">
+            <a href="{{ url_for('salespeople.details', sp_id=sp.id) }}"
+               class="px-2.5 py-1 text-sm rounded-md border border-brand text-brand hover:bg-brand hover:text-white">
+              Details
+            </a>
+
+            {% if show == 'archived' %}
+              <form action="{{ url_for('salespeople.restore', sp_id=sp.id) }}" method="post"
+                    onsubmit="return confirm('Restore {{ sp.name }}?');">
+                <button type="submit"
+                        class="px-2.5 py-1 text-sm rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+                  Restore
+                </button>
+              </form>
+            {% else %}
+              <form action="{{ url_for('salespeople.delete', sp_id=sp.id) }}" method="post"
+                    onsubmit="return confirm('Archive {{ sp.name }}? They will be hidden but not deleted.');">
+                <button type="submit"
+                        class="px-2.5 py-1 text-sm rounded-md border border-red-300 text-red-600 hover:bg-red-50">
+                  Archive
+                </button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="col-span-full text-center text-gray-500 py-12">
+        No salespeople {% if show == 'archived' %}archived{% else %}yet{% endif %}.
+        {% if show != 'archived' %}
+          <a href="{{ url_for('salespeople.create') }}" class="text-brand hover:underline">Add one</a>.
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

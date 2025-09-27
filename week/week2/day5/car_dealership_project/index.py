@@ -4,12 +4,19 @@ from werkzeug.exceptions import HTTPException
 import os
 import traceback
 
-from models import vehicles_bp  # your blueprint export
+from models import vehicles_bp
+from models import sales_bp
+from models import customers_bp
+from models import salespeople_bp
 
 load_dotenv()
 
 app = Flask(__name__)
+
 app.register_blueprint(vehicles_bp, url_prefix="/")
+app.register_blueprint(sales_bp, url_prefix="/")
+app.register_blueprint(customers_bp, url_prefix="/")
+app.register_blueprint(salespeople_bp, url_prefix="/")
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
@@ -24,7 +31,6 @@ def handle_http_exception(e: HTTPException):
     """All other HTTP* (e.g., 400, 403, 405, etc.)."""
     status = e.code or 500
     message = e.description or "An unexpected error occurred."
-    # Try a specific template (e.g., errors/403.html); fall back to generic.
     specific = f"errors/{status}.html"
     try:
         return render_template(specific, message=message), status
@@ -35,11 +41,9 @@ def handle_http_exception(e: HTTPException):
 def handle_exception(e):
     """Non-HTTP exceptions (code bugs, DB errors, etc.)."""
     status = 500
-    # Log the traceback in debug or to your logger
     traceback.print_exc()
     return render_template("errors/500.html"), status
 
 if __name__ == "__main__":
-    # Keep debug for dev; in production, use a WSGI server and disable debug
     app.run(debug=True)
     
