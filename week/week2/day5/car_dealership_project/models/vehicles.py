@@ -7,6 +7,9 @@ import math
 vehicles_bp = Blueprint("vehicles", __name__)
 
 # --- Helper Function ---
+def _is_safe_next(u: str) -> bool:
+    return bool(u) and u.startswith('/')
+
 def get_vehicle(vehicle_id):
     """Gets a single vehicle by its ID."""
     conn = get_db_connection()
@@ -30,7 +33,6 @@ def index():
     # CRITICAL FIX: Check if the connection failed before using it
     if conn is None:
         flash("ERROR: Could not connect to the database. Please check your configuration.", "error")
-        # Since you have no templates yet, we return a simple error message.
         return "<h1>Database Connection Error</h1><p>Could not connect to the database. Please check the server logs.</p>", 500
 
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -50,7 +52,6 @@ def index():
     cursor.close()
     conn.close()
     
-    # This will fail until you create the index.html template, but the database error is fixed.
     return render_template('index.html', vehicles=vehicles, page=page, total_pages=total_pages)
 
 @vehicles_bp.route('/search')
@@ -137,44 +138,53 @@ def create():
             
     return render_template('create.html')
 
-@vehicles_bp.route('/<int:vehicle_id>/edit', methods=('GET', 'POST'))
+@vehicles_bp.route("/<int:vehicle_id>/edit", methods=["GET", "POST"])
 def edit(vehicle_id):
-    """Handles updating an existing vehicle."""
-    vehicle = get_vehicle(vehicle_id)
-    if vehicle is None:
-        flash('Vehicle not found or database error.', 'error')
-        return redirect(url_for('vehicles.index'))
+    conn = get_db_connection(); cur = conn.cursor()
+    cur.execute("""
+        SELECT id, vin, make, model, year, price, color, photo_url
+        FROM vehicles WHERE id=%s
+    """, (vehicle_id,))
+    vehicle = cur.fetchone()
+    if not vehicle:
+        cur.close(); conn.close()
+        flash("Vehicle not found.", "error")
+        return redirect(url_for("vehicles.index"))
 
-    if request.method == 'POST':
-        vin = request.form['vin']
-        make = request.form['make']
-        model = request.form['model']
-        year = request.form['year']
-        price = request.form['price']
-        color = request.form['color']
-        photo_url = request.form.get("photo_url")
-        
-        if not all([vin, make, model, year, price, photo_url]):
-            flash('All fields except color are required!', 'error')
-        else:
-            conn = get_db_connection()
-            if conn is None:
-                flash("ERROR: Could not connect to the database.", "error")
-                return redirect(url_for('vehicles.index'))
-                
-            cursor = conn.cursor()
-            cursor.execute('UPDATE vehicles SET vin = %s, make = %s, model = %s, year = %s, price = %s, color = %s, photo_url = %s WHERE id = %s',
-                           (vin, make, model, year, price, color, photo_url, vehicle_id))
-            
-            cursor.execute('UPDATE salespeople SET Total_Sales_Value = ( SELECT SUM(v.price) FROM sales s JOIN vehicles v ON v.id = s.vehicle_id WHERE s.salesperson_id = salespeople.id);')
+    if request.method == "POST":
+        vin       = (request.form.get("vin") or "").strip()
+        make      = (request.form.get("make") or "").strip()
+        model     = (request.form.get("model") or "").strip()
+        year      = int(request.form.get("year") or 0)
+        price     = float(request.form.get("price") or 0)
+        color     = (request.form.get("color") or None) or None
+        photo_url = (request.form.get("photo_url") or None) or None
+        next_url  = request.form.get("next")  # ← where to go back
 
+        try:
+            cur.execute("""
+                UPDATE vehicles
+                SET vin=%s, make=%s, model=%s, year=%s, price=%s, color=%s, photo_url=%s
+                WHERE id=%s
+            """, (vin, make, model, year, price, color, photo_url, vehicle_id))
+            cur.execute('UPDATE salespeople SET Total_Sales_Value = ( SELECT SUM(v.price) FROM sales s JOIN vehicles v ON v.id = s.vehicle_id WHERE s.salesperson_id = salespeople.id);')
             conn.commit()
-            cursor.close()
-            conn.close()
-            flash('Vehicle updated successfully!', 'success')
-            return redirect(url_for('vehicles.index'))
+            flash("Vehicle updated.", "success")
+        except Exception as e:
+            conn.rollback()
+            flash(f"Database error: {e}", "error")
+            cur.close(); conn.close()
+            return render_template("edit.html", vehicle=vehicle, next_url=next_url)
 
-    return render_template('edit.html', vehicle=vehicle)
+        cur.close(); conn.close()
+
+        if _is_safe_next(next_url):
+            return redirect(next_url)
+        return redirect(url_for("vehicles.index"))
+
+    next_url = request.args.get("next")
+    cur.close(); conn.close()
+    return render_template("edit.html", vehicle=vehicle, next_url=next_url)
 
 @vehicles_bp.route('/<int:vehicle_id>/delete', methods=('POST',))
 def delete(vehicle_id):

@@ -123,7 +123,7 @@ def new_sale(vehicle_id: int):
         return redirect(url_for("vehicles.details", vehicle_id=vehicle_id))
 
     # --- GET: load dropdowns and support preselecting a customer ----
-    selected_customer_id = request.args.get("customer_id")  # from /customers/new redirect
+    selected_customer_id = request.args.get("customer_id")  
     cur.execute("SELECT id, name FROM customers ORDER BY name")
     customers = cur.fetchall()
     # Only ACTIVE salespeople in dropdowns (archived are hidden)

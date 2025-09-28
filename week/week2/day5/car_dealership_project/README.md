@@ -5,6 +5,10 @@ Optional flows include **Sales**, **Customers**, and **Salespeople** (with soft-
 UI: **Tailwind CSS (CDN)** · Charts: **Chart.js (CDN)** · DB: **PostgreSQL** via `psycopg2`.
 
 ---
+## ▶️ Project Video
+https://drive.google.com/file/d/1raqBsYH_jg9mS3P_DyaYo3xlgnUjxw-8/view?usp=sharing
+---
+---
 
 ## 📚 Table of Contents
 

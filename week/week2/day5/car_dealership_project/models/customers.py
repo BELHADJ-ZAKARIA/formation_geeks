@@ -23,7 +23,6 @@ def new_customer():
 
         cur = conn.cursor()
         try:
-            # Add unique index on email in DB if you want to enforce uniqueness
             cur.execute(
                 "INSERT INTO customers (name, email, phone) VALUES (%s, %s, %s) RETURNING id",
                 (name, email, phone),
