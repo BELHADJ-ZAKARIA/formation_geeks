@@ -1,6 +1,6 @@
  🚗 **Dealership Pro** — Flask Inventory & Sales
+ Dealership Pro is a Flask web app for managing a car dealership’s inventory—full CRUD, search, pagination, and image-ready vehicle cards.
 
-Dealership Pro is a Flask web app for managing a car dealership’s inventory—full CRUD, search, pagination, and image-ready vehicle cards.
 ---
 ## ▶️ Project Video
 https://youtu.be/a0pUHrdOlvM
