@@ -128,6 +128,7 @@ def create():
             cursor = conn.cursor()
             cursor.execute('INSERT INTO vehicles (vin, make, model, year, price, color, photo_url) VALUES (%s, %s, %s, %s, %s, %s, %s)',
                            (vin, make, model, year, price, color, photo_url))
+            
             conn.commit()
             cursor.close()
             conn.close()
@@ -164,6 +165,9 @@ def edit(vehicle_id):
             cursor = conn.cursor()
             cursor.execute('UPDATE vehicles SET vin = %s, make = %s, model = %s, year = %s, price = %s, color = %s, photo_url = %s WHERE id = %s',
                            (vin, make, model, year, price, color, photo_url, vehicle_id))
+            
+            cursor.execute('UPDATE salespeople SET Total_Sales_Value = ( SELECT SUM(v.price) FROM sales s JOIN vehicles v ON v.id = s.vehicle_id WHERE s.salesperson_id = salespeople.id);')
+
             conn.commit()
             cursor.close()
             conn.close()
