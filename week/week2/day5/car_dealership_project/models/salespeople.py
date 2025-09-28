@@ -46,9 +46,16 @@ def details(sp_id: int):
         return redirect(url_for("salespeople.index"))
 
     cur.execute("""
-      SELECT COUNT(*) AS cnt, COALESCE(SUM(sale_price),0) AS total
-      FROM sales WHERE salesperson_id=%s
-    """, (sp_id,))
+    SELECT
+            COUNT(s.id) AS cnt,
+            COALESCE(SUM(v.price), 0) AS total
+    FROM
+        sales AS s
+    JOIN
+        vehicles AS v ON v.id = s.vehicle_id
+    WHERE
+    s.salesperson_id = %s;
+      """, (sp_id,))
     stats = cur.fetchone()
     cur.close(); conn.close()
     return render_template("salespeople/details.html", sp=sp, stats=stats)
