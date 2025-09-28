@@ -34,31 +34,29 @@ Ready to get it running? Follow these simple steps.
 
 1. Clone the repository
 
-Bash
-
-git clone <your-repo-url>
-cd restaurant_menu_manager
+> git clone <your-repo-url>
+> cd restaurant_menu_manager
 
 2. Set up your environment
 
 Using uv is the fastest way to get started.
-Bash
 
-uv venv
-uv pip install -r requirements.txt
+>  uv venv
+>  uv pip install -r requirements.txt
 
 Alternatively, use pip.
-Bash
 
-python -m venv .venv
+>  python -m venv .venv
 
-# On macOS/Linux
-source .venv/bin/activate
+On macOS/Linux
 
-# On Windows
-.\.venv\Scripts\activate
+>  source .venv/bin/activate
 
-pip install -r requirements.txt
+On Windows
+
+> .\.venv\Scripts\activate
+
+> pip install -r requirements.txt
 
 3. PostgreSQL setup
 
@@ -68,9 +66,7 @@ SQL
 -- Connect to your PostgreSQL server and run these commands
 CREATE DATABASE restaurant;
 
--- Optional but recommended
-CREATE USER menu_user WITH PASSWORD 'StrongPass123';
-GRANT ALL PRIVILEGES ON DATABASE restaurant TO menu_user;
+> Run The file  all schema.sql
 
 4. Environment variables
 
@@ -102,10 +98,12 @@ FLASK_SECRET_KEY=change-me
 You're all set! Use uv for a quick start, or a standard Python command.
 Bash
 
-# with uv
-uv run app.py
+with uv
 
-# with standard python
-python app.py
+> uv run app.py
+
+with standard python
+
+> python app.py
 
 Now, navigate to http://127.0.0.1:5000 in your browser and start managing your menu! 🚀
