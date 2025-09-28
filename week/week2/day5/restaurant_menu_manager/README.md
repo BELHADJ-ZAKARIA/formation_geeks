@@ -2,6 +2,13 @@
 
 A sleek web app built with Flask and PostgreSQL for effortlessly managing a restaurant's menu. This tiny but powerful tool provides a complete CRUD (Create, Read, Update, Delete) interface for menu items, along with features for organization, search, and presentation.
 
+---
+
+## ▶️ Project Video
+https://youtu.be/a0pUHrdOlvM
+
+---
+
 ✨ Features
 
     Categorized Menu View: Navigate through your menu with dedicated views for Main, Desserts, and Beverages. Access them via intuitive URLs like /menu/main.
