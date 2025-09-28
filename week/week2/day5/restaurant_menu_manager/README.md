@@ -5,8 +5,7 @@ A sleek web app built with Flask and PostgreSQL for effortlessly managing a rest
 ---
 
 ## ▶️ Project Video
-https://youtu.be/a0pUHrdOlvM
-
+https://youtu.be/20KYq8Pypak
 ---
 
 ✨ Features
