@@ -41,7 +41,7 @@
       </div>
 
       <div class="px-4 py-3 border-t bg-gray-50 flex justify-end gap-2">
-        <a href="{{ url_for('vehicles.index') }}" class="px-3 py-2 rounded-md border text-sm hover:bg-gray-100">Back</a>
+        <a href="{{ request.args.get('next') or request.referrer or url_for('vehicles.index') }}" class="px-3 py-2 rounded-md border text-sm hover:bg-gray-100">Back</a>
         <a href="{{ url_for('vehicles.edit', vehicle_id=vehicle.id) }}" class="px-3 py-2 rounded-md bg-brand hover:bg-brand-dark text-white text-sm">Edit</a>
       </div>
     </div>

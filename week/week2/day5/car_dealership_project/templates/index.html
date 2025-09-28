@@ -9,7 +9,7 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for vehicle in vehicles %}
-      <div class="bg-white border rounded-xl shadow-sm overflow-hidden flex flex-col">
+      <div id="v{{ vehicle.id }}" class="bg-white border rounded-xl shadow-sm overflow-hidden flex flex-col">
         {% if vehicle.photo_url %}
           <img src="{{ vehicle.photo_url }}" alt="{{ vehicle.make }} {{ vehicle.model }}"
                class="h-48 w-full object-cover" loading="lazy" decoding="async"
@@ -24,7 +24,7 @@
           <p class="text-sm"><span class="font-semibold">Price:</span> {{ "{:,.2f}".format(vehicle.price) }} DH</p>
 
           <div class="mt-3 flex gap-2">
-            <a href="{{ url_for('vehicles.details', vehicle_id=vehicle.id) }}"
+            <a href="{{ url_for('vehicles.details', vehicle_id=vehicle.id, next=(request.full_path ~ '#v' ~ vehicle.id)) }}"
                class="px-2.5 py-1 text-sm rounded-md border border-brand text-brand hover:bg-brand hover:text-white">Details</a>
             <a href="{{ url_for('vehicles.edit', vehicle_id=vehicle.id) }}"
                class="px-2.5 py-1 text-sm rounded-md border text-gray-700 hover:bg-gray-100">Edit</a>

@@ -23,7 +23,6 @@ def get_db_connection():
     except psycopg2.OperationalError as e:
         print(e)
         return None
-    # pylint: disable=W0718
     except Exception as e:
         print(e)
         return None

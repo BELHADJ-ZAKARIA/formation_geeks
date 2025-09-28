@@ -23,7 +23,6 @@
               {% endfor %}
             </select>
 
-            <!-- Opens Add Customer and returns to this form -->
             <a href="{{ url_for('customers.new_customer', next=url_for('sales.new_sale', vehicle_id=vehicle.id)) }}"
                 class="px-3 py-2 rounded-md bg-brand hover:bg-brand-dark text-white text-sm whitespace-nowrap">
                 + Add customer
