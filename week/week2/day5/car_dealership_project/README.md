@@ -6,7 +6,7 @@ UI: **Tailwind CSS (CDN)** · Charts: **Chart.js (CDN)** · DB: **PostgreSQL** v
 
 ---
 ## ▶️ Project Video
-https://drive.google.com/file/d/1raqBsYH_jg9mS3P_DyaYo3xlgnUjxw-8/view?usp=sharing
+  >>>> https://youtu.be/a0pUHrdOlvM
 ---
 ---
 
