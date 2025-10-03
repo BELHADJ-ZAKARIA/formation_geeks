@@ -88,7 +88,7 @@ INSERT INTO Student (name, age) VALUES
 ('Patrick', 10),
 ('Bob', 14);
 
--- 5. Create Library (Junction) Table
+-- 5. Create Library
 CREATE TABLE Library (
     book_fk_id INTEGER,
     student_fk_id INTEGER,
